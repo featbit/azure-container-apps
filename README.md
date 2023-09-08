@@ -37,3 +37,4 @@ $Env:ARM_SUBSCRIPTION_ID = "5776697f-f76a-4a4a-9b42-ce2dbe5d7475"
 $Env:ARM_TENANT_ID = "551443f2-94bb-4dd3-a22f-1d267240fe40"
 ```
 
+https://github.com/DFE-Digital/terraform-azurerm-container-apps-hosting

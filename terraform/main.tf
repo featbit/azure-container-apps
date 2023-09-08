@@ -14,12 +14,54 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "featbit" {
-  name     = var.resource_group_name
-  location = var.location
+resource "azurerm_redis_cache" "featbit" {
+  # count = var.redis.if_has_redis ? 1 : 0
 
-  tags = {
-    Team = "FeatBit"
+  name                = "featbit-redis"
+  location            = azurerm_resource_group.featbit.location
+  resource_group_name = azurerm_resource_group.featbit.name
+  capacity            = var.redis.capacity
+  family              = var.redis.family
+  sku_name            = var.redis.sku_name
+  enable_non_ssl_port = var.redis.enable_non_ssl_port
+  minimum_tls_version = var.redis.minimum_tls_version
+
+  redis_configuration {
+  }
+}
+
+# output "featbit_redis" {
+#   value = azurerm_redis_cache.featbit
+# }
+
+resource "azurerm_virtual_network" "featbit_vnet" {
+
+  name                = "featbit-vnet"
+  resource_group_name = azurerm_resource_group.featbit.name
+  location            = azurerm_resource_group.featbit.location
+  address_space       = ["10.0.0.0/16"]
+}
+
+resource "azurerm_subnet" "featbit_redis" {
+
+  name                 = "featbit-redis-subnet"
+  resource_group_name  = azurerm_resource_group.featbit.name
+  virtual_network_name = azurerm_virtual_network.featbit_vnet.name
+  address_prefixes     = ["10.0.1.0/24"]
+}
+
+resource "azurerm_private_endpoint" "featbit_redis_pe" {
+
+  name                = "featbitRedisPrivateEndpoint"
+  location            = azurerm_resource_group.featbit.location
+  resource_group_name = azurerm_resource_group.featbit.name
+  subnet_id           = azurerm_subnet.featbit_redis.id
+
+  private_service_connection {
+    name                           = "featbitRedisPrivateServiceConnection"
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_redis_cache.featbit.id
+    subresource_names               = [ "redisCache" ]
   }
 }
 
@@ -46,27 +88,28 @@ resource "azurerm_container_app" "da_server" {
   revision_mode                = "Single"
 
   template {
+    min_replicas = 1
+    max_replicas = 3
     container {
       name   = var.container_name.da_server
       image  = "docker.io/featbit/featbit-data-analytics-server:latest"
       cpu    = 0.25
       memory = "0.5Gi"
-      min_replicas = 1
-      max_replicas = 3
       env {
-        name = "REDIS_URL"
-        value = var.redis.connection_str
+        name  = "REDIS_URL"
+        # value = var.redis.if_has_redis ? azurerm_redis_cache.featbit.primary_connection_string : var.redis.connection_str
+        value = azurerm_redis_cache.featbit.primary_connection_string
       }
       env {
-        name = "MONGO_URI"
-        value =var.mongodb.connection_str
+        name  = "MONGO_URI"
+        value = var.mongodb.connection_str
       }
       env {
-        name = "MONGO_INITDB_DATABASE"
+        name  = "MONGO_INITDB_DATABASE"
         value = var.mongodb.db_name
       }
       env {
-        name = "MONGO_HOST"
+        name  = "MONGO_HOST"
         value = "mongodb"
       }
     }
@@ -80,27 +123,27 @@ resource "azurerm_container_app" "api_server" {
   revision_mode                = "Single"
 
   template {
+    min_replicas = 1
+    max_replicas = 3
     container {
-      name   = var.container_name.api_server
-      image  = "docker.io/featbit/featbit-api-server:latest"
-      cpu    = 0.25
-      memory = "0.5Gi"
-      min_replicas = 1
-      max_replicas = 3
+      name         = var.container_name.api_server
+      image        = "docker.io/featbit/featbit-api-server:latest"
+      cpu          = 0.25
+      memory       = "0.5Gi"
       env {
-        name = "MongoDb__ConnectionString"
+        name  = "MongoDb__ConnectionString"
         value = var.mongodb.connection_str
       }
       env {
-        name = "MongoDb__Database"
+        name  = "MongoDb__Database"
         value = var.mongodb.db_name
       }
       env {
-        name = "Redis__ConnectionString"
-        value = var.redis.connection_str
+        name  = "Redis__ConnectionString"
+        value = var.redis.if_has_redis ? azurerm_redis_cache.featbit.primary_connection_string : var.redis.connection_str
       }
       env {
-        name = "OLAP__ServiceHost"
+        name  = "OLAP__ServiceHost"
         value = "http://da-server"
       }
     }
