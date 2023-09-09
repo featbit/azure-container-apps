@@ -21,7 +21,7 @@ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/5776697f-
 # {
 #   "appId": "805e4e42-b6e1-4fb0-b348-2fac2bf30ffc",
 #   "displayName": "azure-cli-2023-09-06-06-01-56",
-#   "password": "X9v8Q~vfC55r3GFIcbF2bQAyuSimqo~LOILvzcIk",
+#   "password": "",
 #   "tenant": "551443f2-94bb-4dd3-a22f-1d267240fe40"
 # }
 
@@ -32,7 +32,7 @@ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/5776697f-
 # tenant is the tenant_id defined above.
 
 $Env:ARM_CLIENT_ID = "805e4e42-b6e1-4fb0-b348-2fac2bf30ffc"
-$Env:ARM_CLIENT_SECRET = "X9v8Q~vfC55r3GFIcbF2bQAyuSimqo~LOILvzcIk"
+$Env:ARM_CLIENT_SECRET = ""
 $Env:ARM_SUBSCRIPTION_ID = "5776697f-f76a-4a4a-9b42-ce2dbe5d7475"
 $Env:ARM_TENANT_ID = "551443f2-94bb-4dd3-a22f-1d267240fe40"
 ```

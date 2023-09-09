@@ -61,7 +61,7 @@ resource "azurerm_private_endpoint" "featbit_redis_pe" {
     name                           = "featbitRedisPrivateServiceConnection"
     is_manual_connection           = false
     private_connection_resource_id = azurerm_redis_cache.featbit.id
-    subresource_names               = [ "redisCache" ]
+    subresource_names              = ["redisCache"]
   }
 }
 
@@ -86,17 +86,21 @@ resource "azurerm_container_app" "da_server" {
   container_app_environment_id = azurerm_container_app_environment.featbit.id
   resource_group_name          = azurerm_resource_group.featbit.name
   revision_mode                = "Single"
+  # ingress = {
+  #   target_port = 8200
+  # }
 
   template {
     min_replicas = 1
     max_replicas = 3
+
     container {
       name   = var.container_name.da_server
       image  = "docker.io/featbit/featbit-data-analytics-server:latest"
       cpu    = 0.25
       memory = "0.5Gi"
       env {
-        name  = "REDIS_URL"
+        name = "REDIS_URL"
         # value = var.redis.if_has_redis ? azurerm_redis_cache.featbit.primary_connection_string : var.redis.connection_str
         value = azurerm_redis_cache.featbit.primary_connection_string
       }
@@ -114,6 +118,10 @@ resource "azurerm_container_app" "da_server" {
       }
     }
   }
+
+  depends_on = [
+    azurerm_redis_cache.featbit
+  ]
 }
 
 resource "azurerm_container_app" "api_server" {
@@ -121,15 +129,22 @@ resource "azurerm_container_app" "api_server" {
   container_app_environment_id = azurerm_container_app_environment.featbit.id
   resource_group_name          = azurerm_resource_group.featbit.name
   revision_mode                = "Single"
+  ingress {
+    target_port = 5000
+    traffic_weight {
+      percentage = 100
+    }
+  }
 
   template {
     min_replicas = 1
     max_replicas = 3
+
     container {
-      name         = var.container_name.api_server
-      image        = "docker.io/featbit/featbit-api-server:latest"
-      cpu          = 0.25
-      memory       = "0.5Gi"
+      name   = var.container_name.api_server
+      image  = "docker.io/featbit/featbit-api-server:latest"
+      cpu    = 0.25
+      memory = "0.5Gi"
       env {
         name  = "MongoDb__ConnectionString"
         value = var.mongodb.connection_str
@@ -140,7 +155,7 @@ resource "azurerm_container_app" "api_server" {
       }
       env {
         name  = "Redis__ConnectionString"
-        value = var.redis.if_has_redis ? azurerm_redis_cache.featbit.primary_connection_string : var.redis.connection_str
+        value = azurerm_redis_cache.featbit.primary_connection_string
       }
       env {
         name  = "OLAP__ServiceHost"
@@ -150,26 +165,92 @@ resource "azurerm_container_app" "api_server" {
   }
 
   depends_on = [
-    azurerm_container_app.da_server
+    azurerm_container_app.da_server,
+    azurerm_redis_cache.featbit
   ]
 }
 
-# resource "azurerm_container_app" "ui" {
-#   name                         = var.container_name.ui
-#   container_app_environment_id = azurerm_container_app_environment.featbit.id
-#   resource_group_name          = azurerm_resource_group.featbit.name
-#   revision_mode                = "Single"
+resource "azurerm_container_app" "eval_server" {
+  name                         = var.container_name.eval_server
+  container_app_environment_id = azurerm_container_app_environment.featbit.id
+  resource_group_name          = azurerm_resource_group.featbit.name
+  revision_mode                = "Single"
+  ingress {
+    target_port = 5100
+    traffic_weight {
+      percentage = 100
+    }
+  }
 
-#   template {
-#     container {
-#       name   = var.container_name.ui
-#       image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
-#       cpu    = 0.25
-#       memory = "0.5Gi"
-#     }
-#   }
+  template {
+    min_replicas = 1
+    max_replicas = 3
 
-#   depends_on = [
-#     azurerm_container_app.api_server
-#   ]
-# }
+    container {
+      name   = var.container_name.eval_server
+      image  = "docker.io/featbit/featbit-evaluation-server:latest"
+      cpu    = 0.25
+      memory = "0.5Gi"
+      env {
+        name  = "MongoDb__ConnectionString"
+        value = var.mongodb.connection_str
+      }
+      env {
+        name  = "MongoDb__Database"
+        value = var.mongodb.db_name
+      }
+      env {
+        name  = "Redis__ConnectionString"
+        value = azurerm_redis_cache.featbit.primary_connection_string
+      }
+      env {
+        name  = "OLAP__ServiceHost"
+        value = "http://da-server"
+      }
+    }
+  }
+
+  depends_on = [
+    azurerm_redis_cache.featbit
+  ]
+}
+
+resource "azurerm_container_app" "ui" {
+  name                         = var.container_name.ui
+  container_app_environment_id = azurerm_container_app_environment.featbit.id
+  resource_group_name          = azurerm_resource_group.featbit.name
+  revision_mode                = "Single"
+  # ingress = {
+  #   target_port = 8081
+  # }
+
+  template {
+    min_replicas = 1
+    max_replicas = 3
+
+    container {
+      name   = var.container_name.ui
+      image  = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+      cpu    = 0.25
+      memory = "0.5Gi"
+
+      env {
+        name  = "API_URL"
+        value = format("http://%s", var.container_name.api_server)
+      }
+      env {
+        name  = "DEMO_URL"
+        value = "https://featbit-samples.vercel.app"
+      }
+      env {
+        name  = "EVALUATION_URL"
+        value = format("http://%s", var.container_name.eval_server)
+      }
+    }
+  }
+
+  depends_on = [
+    azurerm_container_app.api_server,
+    azurerm_container_app.eval_server
+  ]
+}

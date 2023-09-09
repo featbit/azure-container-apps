@@ -38,7 +38,7 @@ variable "mongodb" {
 
 variable "redis" {
   type = object({
-    if_has_redis = bool
+    # if_has_redis = bool
 
     capacity            = number
     family              = string
@@ -46,10 +46,10 @@ variable "redis" {
     enable_non_ssl_port = bool
     minimum_tls_version = string
 
-    connection_str = string
+    # connection_str = string
   })
   default = {
-    if_has_redis = true
+    # if_has_redis = true
 
     capacity            = 0
     family              = "C"
@@ -57,6 +57,6 @@ variable "redis" {
     enable_non_ssl_port = false
     minimum_tls_version = "1.2"
 
-    connection_str = "http://redis:6379"
+    # connection_str = "http://redis:6379"
   }
 }
