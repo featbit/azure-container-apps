@@ -31,7 +31,7 @@ variable "mongodb" {
     db_name        = string
   })
   default = {
-    connection_str = "mongodb://admin:password@mongodb:27017"
+    connection_str = "mongodb+srv://featbit:zMqvBTJz9cKgKsoL@featbit-tio.q5z1xny.mongodb.net/?retryWrites=true&w=majority"
     db_name        = "featbit"
   }
 }
