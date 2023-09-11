@@ -18,9 +18,16 @@ provider "azurerm" {
   }
 }
 
-resource "azurerm_redis_cache" "featbit" {
-  # count = var.redis.if_has_redis ? 1 : 0
+resource "azurerm_resource_group" "featbit" {
+  name     = var.resource_group_name
+  location = var.location
 
+  tags = {
+    Team = "FeatBit"
+  }
+}
+
+resource "azurerm_redis_cache" "featbit" {
   name                = "featbit-redis"
   location            = azurerm_resource_group.featbit.location
   resource_group_name = azurerm_resource_group.featbit.name
@@ -33,10 +40,6 @@ resource "azurerm_redis_cache" "featbit" {
   redis_configuration {
   }
 }
-
-# output "featbit_redis" {
-#   value = azurerm_redis_cache.featbit
-# }
 
 resource "azurerm_virtual_network" "featbit_vnet" {
 
@@ -89,9 +92,14 @@ resource "azurerm_container_app" "da_server" {
   container_app_environment_id = azurerm_container_app_environment.featbit.id
   resource_group_name          = azurerm_resource_group.featbit.name
   revision_mode                = "Single"
-  # ingress = {
-  #   target_port = 8200
-  # }
+  ingress {
+    allow_insecure_connections = true
+    target_port = 80
+    external_enabled = true
+    traffic_weight {
+      percentage = 100
+    }
+  }
 
   template {
     min_replicas = 1
@@ -118,6 +126,10 @@ resource "azurerm_container_app" "da_server" {
       env {
         name  = "MONGO_HOST"
         value = "mongodb"
+      }
+      env {
+        name  = "CHECK_DB_LIVNESS"
+        value = false
       }
     }
   }
@@ -222,6 +234,18 @@ resource "azurerm_container_app" "eval_server" {
   ]
 }
 
+
+data "azurerm_container_app" "api_server" {
+  name                = azurerm_container_app.api_server.name
+  resource_group_name = azurerm_resource_group.featbit.name
+}
+
+data "azurerm_container_app" "eval_server" {
+  name                = azurerm_container_app.eval_server.name
+  resource_group_name = azurerm_resource_group.featbit.name
+}
+
+
 resource "azurerm_container_app" "ui" {
   name                         = var.container_name.ui
   container_app_environment_id = azurerm_container_app_environment.featbit.id
@@ -248,7 +272,7 @@ resource "azurerm_container_app" "ui" {
 
       env {
         name  = "API_URL"
-        value = format("https://%s", azurerm_container_app.api_server.ingress[0].fqdn) 
+        value = format("https://%s", data.azurerm_container_app.api_server.ingress[0].fqdn) 
       }
       env {
         name  = "DEMO_URL"
@@ -256,7 +280,7 @@ resource "azurerm_container_app" "ui" {
       }
       env {
         name  = "EVALUATION_URL"
-        value = format("https://%s", azurerm_container_app.eval_server.ingress[0].fqdn) 
+        value = format("https://%s", data.azurerm_container_app.eval_server.ingress[0].fqdn) 
       }
     }
   }
