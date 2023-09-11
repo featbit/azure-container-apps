@@ -81,9 +81,9 @@ resource "azurerm_log_analytics_workspace" "featbit" {
 }
 
 resource "azurerm_container_app_environment" "featbit" {
-  name                = var.container_apps_environment
-  location            = azurerm_resource_group.featbit.location
-  resource_group_name = azurerm_resource_group.featbit.name
+  name                       = var.container_apps_environment
+  location                   = azurerm_resource_group.featbit.location
+  resource_group_name        = azurerm_resource_group.featbit.name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.featbit.id
 }
 
@@ -94,8 +94,8 @@ resource "azurerm_container_app" "da_server" {
   revision_mode                = "Single"
   ingress {
     allow_insecure_connections = true
-    target_port = 80
-    external_enabled = true
+    target_port                = 80
+    external_enabled           = true
     traffic_weight {
       percentage = 100
     }
@@ -139,6 +139,11 @@ resource "azurerm_container_app" "da_server" {
   ]
 }
 
+data "azurerm_container_app" "da_server" {
+  name = azurerm_container_app.da_server.name
+  resource_group_name = azurerm_resource_group.featbit.name
+}
+
 resource "azurerm_container_app" "api_server" {
   name                         = var.container_name.api_server
   container_app_environment_id = azurerm_container_app_environment.featbit.id
@@ -146,8 +151,8 @@ resource "azurerm_container_app" "api_server" {
   revision_mode                = "Single"
   ingress {
     allow_insecure_connections = true
-    target_port = 5000
-    external_enabled = true
+    target_port                = 5000
+    external_enabled           = true
     traffic_weight {
       percentage = 100
     }
@@ -176,7 +181,7 @@ resource "azurerm_container_app" "api_server" {
       }
       env {
         name  = "OLAP__ServiceHost"
-        value = "http://da-server"
+        value = format("https://%s", azurerm_container_app.da_server.name)
       }
     }
   }
@@ -194,8 +199,8 @@ resource "azurerm_container_app" "eval_server" {
   revision_mode                = "Single"
   ingress {
     allow_insecure_connections = true
-    target_port = 5100
-    external_enabled = true
+    target_port                = 5100
+    external_enabled           = true
     traffic_weight {
       percentage = 100
     }
@@ -224,7 +229,7 @@ resource "azurerm_container_app" "eval_server" {
       }
       env {
         name  = "OLAP__ServiceHost"
-        value = "http://da-server"
+        value = format("https://%s", azurerm_container_app.da_server.name)
       }
     }
   }
@@ -253,8 +258,8 @@ resource "azurerm_container_app" "ui" {
   revision_mode                = "Single"
   ingress {
     allow_insecure_connections = false
-    target_port = 80
-    external_enabled = true
+    target_port                = 80
+    external_enabled           = true
     traffic_weight {
       percentage = 100
     }
@@ -272,7 +277,7 @@ resource "azurerm_container_app" "ui" {
 
       env {
         name  = "API_URL"
-        value = format("https://%s", data.azurerm_container_app.api_server.ingress[0].fqdn) 
+        value = format("https://%s", data.azurerm_container_app.api_server.ingress[0].fqdn)
       }
       env {
         name  = "DEMO_URL"
@@ -280,7 +285,7 @@ resource "azurerm_container_app" "ui" {
       }
       env {
         name  = "EVALUATION_URL"
-        value = format("https://%s", data.azurerm_container_app.eval_server.ingress[0].fqdn) 
+        value = format("https://%s", data.azurerm_container_app.eval_server.ingress[0].fqdn)
       }
     }
   }
