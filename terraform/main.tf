@@ -80,6 +80,12 @@ resource "azurerm_log_analytics_workspace" "featbit" {
   retention_in_days   = 30
 }
 
+
+data "azurerm_redis_cache" "featbit" {
+  name = azurerm_redis_cache.featbit.name
+  resource_group_name = azurerm_resource_group.featbit.name
+}
+
 resource "azurerm_container_app_environment" "featbit" {
   name                       = var.container_apps_environment
   location                   = azurerm_resource_group.featbit.location
@@ -95,8 +101,9 @@ resource "azurerm_container_app" "da_server" {
   ingress {
     allow_insecure_connections = true
     target_port                = 80
-    external_enabled           = true
+    external_enabled           = false
     traffic_weight {
+      latest_revision = true
       percentage = 100
     }
   }
@@ -112,8 +119,7 @@ resource "azurerm_container_app" "da_server" {
       memory = "1.5Gi"
       env {
         name = "REDIS_URL"
-        # value = var.redis.if_has_redis ? azurerm_redis_cache.featbit.primary_connection_string : var.redis.connection_str
-        value = azurerm_redis_cache.featbit.primary_connection_string
+        value = data.azurerm_redis_cache.featbit.primary_connection_string
       }
       env {
         name  = "MONGO_URI"
@@ -154,6 +160,7 @@ resource "azurerm_container_app" "api_server" {
     target_port                = 5000
     external_enabled           = true
     traffic_weight {
+      latest_revision = true
       percentage = 100
     }
   }
@@ -177,19 +184,26 @@ resource "azurerm_container_app" "api_server" {
       }
       env {
         name  = "Redis__ConnectionString"
-        value = azurerm_redis_cache.featbit.primary_connection_string
+        value = data.azurerm_redis_cache.featbit.primary_connection_string
       }
       env {
         name  = "OLAP__ServiceHost"
-        value = format("https://%s", azurerm_container_app.da_server.name)
+        value = format("https://%s", data.azurerm_container_app.da_server.name)
       }
     }
   }
 
   depends_on = [
-    azurerm_container_app.da_server,
-    azurerm_redis_cache.featbit
+    data.azurerm_container_app.da_server,
+    data.azurerm_redis_cache.featbit
+    # azurerm_container_app.da_server,
+    # azurerm_redis_cache.featbit
   ]
+}
+
+data "azurerm_container_app" "api_server" {
+  name = azurerm_container_app.api_server.name
+  resource_group_name = azurerm_resource_group.featbit.name
 }
 
 resource "azurerm_container_app" "eval_server" {
@@ -197,14 +211,6 @@ resource "azurerm_container_app" "eval_server" {
   container_app_environment_id = azurerm_container_app_environment.featbit.id
   resource_group_name          = azurerm_resource_group.featbit.name
   revision_mode                = "Single"
-  ingress {
-    allow_insecure_connections = true
-    target_port                = 5100
-    external_enabled           = true
-    traffic_weight {
-      percentage = 100
-    }
-  }
 
   template {
     min_replicas = 1
@@ -225,73 +231,82 @@ resource "azurerm_container_app" "eval_server" {
       }
       env {
         name  = "Redis__ConnectionString"
-        value = azurerm_redis_cache.featbit.primary_connection_string
-      }
-      env {
-        name  = "OLAP__ServiceHost"
-        value = format("https://%s", azurerm_container_app.da_server.name)
+        value = data.azurerm_redis_cache.featbit.primary_connection_string
       }
     }
   }
 
-  depends_on = [
-    azurerm_redis_cache.featbit
-  ]
-}
-
-
-data "azurerm_container_app" "api_server" {
-  name                = azurerm_container_app.api_server.name
-  resource_group_name = azurerm_resource_group.featbit.name
-}
-
-data "azurerm_container_app" "eval_server" {
-  name                = azurerm_container_app.eval_server.name
-  resource_group_name = azurerm_resource_group.featbit.name
-}
-
-
-resource "azurerm_container_app" "ui" {
-  name                         = var.container_name.ui
-  container_app_environment_id = azurerm_container_app_environment.featbit.id
-  resource_group_name          = azurerm_resource_group.featbit.name
-  revision_mode                = "Single"
   ingress {
-    allow_insecure_connections = false
-    target_port                = 80
+    allow_insecure_connections = true
+    target_port                = 5100
     external_enabled           = true
     traffic_weight {
+      latest_revision = true
       percentage = 100
     }
   }
 
-  template {
-    min_replicas = 1
-    max_replicas = 3
-
-    container {
-      name   = var.container_name.ui
-      image  = "featbit/featbit-ui:latest"
-      cpu    = 0.5
-      memory = "1Gi"
-
-      env {
-        name  = "API_URL"
-        value = format("https://%s", data.azurerm_container_app.api_server.ingress[0].fqdn)
-      }
-      env {
-        name  = "DEMO_URL"
-        value = "https://featbit-samples.vercel.app"
-      }
-      env {
-        name  = "EVALUATION_URL"
-        value = format("https://%s", data.azurerm_container_app.eval_server.ingress[0].fqdn)
-      }
-    }
-  }
-
   depends_on = [
-    azurerm_container_app.api_server,
-    azurerm_container_app.eval_server
+    # azurerm_container_app.api_server,
+    # azurerm_redis_cache.featbit
+    data.azurerm_container_app.api_server,
+    data.azurerm_redis_cache.featbit
   ]
 }
+
+
+# data "azurerm_container_app" "api_server" {
+#   name                = azurerm_container_app.api_server.name
+#   resource_group_name = azurerm_resource_group.featbit.name
+# }
+
+# data "azurerm_container_app" "eval_server" {
+#   name                = azurerm_container_app.eval_server.name
+#   resource_group_name = azurerm_resource_group.featbit.name
+# }
+
+
+# resource "azurerm_container_app" "ui" {
+#   name                         = var.container_name.ui
+#   container_app_environment_id = azurerm_container_app_environment.featbit.id
+#   resource_group_name          = azurerm_resource_group.featbit.name
+#   revision_mode                = "Single"
+#   ingress {
+#     allow_insecure_connections = false
+#     target_port                = 80
+#     external_enabled           = true
+#     traffic_weight {
+#       percentage = 100
+#     }
+#   }
+
+#   template {
+#     min_replicas = 1
+#     max_replicas = 3
+
+#     container {
+#       name   = var.container_name.ui
+#       image  = "featbit/featbit-ui:latest"
+#       cpu    = 0.5
+#       memory = "1Gi"
+
+#       env {
+#         name  = "API_URL"
+#         value = format("https://%s", data.azurerm_container_app.api_server.ingress[0].fqdn)
+#       }
+#       env {
+#         name  = "DEMO_URL"
+#         value = "https://featbit-samples.vercel.app"
+#       }
+#       env {
+#         name  = "EVALUATION_URL"
+#         value = format("https://%s", data.azurerm_container_app.eval_server.ingress[0].fqdn)
+#       }
+#     }
+#   }
+
+#   depends_on = [
+#     azurerm_container_app.api_server,
+#     azurerm_container_app.eval_server
+#   ]
+# }
