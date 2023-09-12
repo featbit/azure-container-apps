@@ -31,32 +31,26 @@ variable "mongodb" {
     db_name        = string
   })
   default = {
-    connection_str = "mongodb+srv://featbit:zMqvBTJz9cKgKsoL@featbit-tio.q5z1xny.mongodb.net/?retryWrites=true&w=majority"
+    connection_str = ""
     db_name        = "featbit"
   }
 }
 
 variable "redis" {
   type = object({
-    # if_has_redis = bool
-
-    capacity            = number
-    family              = string
-    sku_name            = string
-    enable_non_ssl_port = bool
-    minimum_tls_version = string
-
-    # connection_str = string
+    capacity                      = number
+    family                        = string
+    sku_name                      = string
+    enable_non_ssl_port           = bool
+    minimum_tls_version           = string
+    public_network_access_enabled = bool
   })
   default = {
-    # if_has_redis = true
-
     capacity            = 0
     family              = "C"
-    sku_name            = "Basic"
+    sku_name            = "Standard"
     enable_non_ssl_port = false
     minimum_tls_version = "1.2"
-
-    # connection_str = "http://redis:6379"
+    public_network_access_enabled = true
   }
 }

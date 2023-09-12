@@ -36,6 +36,7 @@ resource "azurerm_redis_cache" "featbit" {
   sku_name            = var.redis.sku_name
   enable_non_ssl_port = var.redis.enable_non_ssl_port
   minimum_tls_version = var.redis.minimum_tls_version
+  public_network_access_enabled = var.redis.public_network_access_enabled
 
   redis_configuration {
   }
@@ -119,8 +120,7 @@ resource "azurerm_container_app" "da_server" {
       memory = "1.5Gi"
       env {
         name = "REDIS_URL"
-        # value = data.azurerm_redis_cache.featbit.primary_connection_string
-        value = "rediss://default:D8CgNHhHQlb6rVI6eWqB3T8KuP2Je4OPSAzCaN5807E=@featbit-redis.redis.cache.windows.net:6380"
+        value = format("rediss://default:%s@%s:%s", data.azurerm_redis_cache.featbit.primary_access_key,data.azurerm_redis_cache.featbit.hostname,data.azurerm_redis_cache.featbit.ssl_port)
       }
       env {
         name  = "MONGO_URI"
@@ -189,23 +189,16 @@ resource "azurerm_container_app" "api_server" {
       }
       env {
         name  = "OLAP__ServiceHost"
-        value = format("http://%s", data.azurerm_container_app.da_server.name)
+        value = format("http://%s", azurerm_container_app.da_server.name)
       }
     }
   }
 
   depends_on = [
-    data.azurerm_container_app.da_server,
-    data.azurerm_redis_cache.featbit
-    # azurerm_container_app.da_server,
-    # azurerm_redis_cache.featbit
+    azurerm_container_app.da_server
   ]
 }
 
-data "azurerm_container_app" "api_server" {
-  name = azurerm_container_app.api_server.name
-  resource_group_name = azurerm_resource_group.featbit.name
-}
 
 resource "azurerm_container_app" "eval_server" {
   name                         = var.container_name.eval_server
@@ -248,11 +241,13 @@ resource "azurerm_container_app" "eval_server" {
   }
 
   depends_on = [
-    # azurerm_container_app.api_server,
-    # azurerm_redis_cache.featbit
-    data.azurerm_container_app.api_server,
-    data.azurerm_redis_cache.featbit
+    azurerm_container_app.api_server
   ]
+}
+
+data "azurerm_container_app" "api_server" {
+  name = azurerm_container_app.api_server.name
+  resource_group_name = azurerm_resource_group.featbit.name
 }
 
 data "azurerm_container_app" "eval_server" {
