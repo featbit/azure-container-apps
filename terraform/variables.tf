@@ -48,9 +48,9 @@ variable "redis" {
   default = {
     capacity            = 0
     family              = "C"
-    sku_name            = "Standard"
+    sku_name            = "Basic"
     enable_non_ssl_port = false
     minimum_tls_version = "1.2"
-    public_network_access_enabled = true
+    public_network_access_enabled = false
   }
 }

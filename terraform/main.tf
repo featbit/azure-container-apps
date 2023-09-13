@@ -27,27 +27,12 @@ resource "azurerm_resource_group" "featbit" {
   }
 }
 
-resource "azurerm_redis_cache" "featbit" {
-  name                = "featbit-redis"
-  location            = azurerm_resource_group.featbit.location
-  resource_group_name = azurerm_resource_group.featbit.name
-  capacity            = var.redis.capacity
-  family              = var.redis.family
-  sku_name            = var.redis.sku_name
-  enable_non_ssl_port = var.redis.enable_non_ssl_port
-  minimum_tls_version = var.redis.minimum_tls_version
-  public_network_access_enabled = var.redis.public_network_access_enabled
-
-  redis_configuration {
-  }
-}
-
 resource "azurerm_virtual_network" "featbit_vnet" {
 
   name                = "featbit-vnet"
   resource_group_name = azurerm_resource_group.featbit.name
   location            = azurerm_resource_group.featbit.location
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["192.168.0.0/16"]
 }
 
 resource "azurerm_subnet" "featbit_redis" {
@@ -55,7 +40,30 @@ resource "azurerm_subnet" "featbit_redis" {
   name                 = "featbit-redis-subnet"
   resource_group_name  = azurerm_resource_group.featbit.name
   virtual_network_name = azurerm_virtual_network.featbit_vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes     = [cidrsubnet("192.168.0.0/16", 7, 0)]
+}
+
+resource "azurerm_subnet" "featbit_container_apps" {
+  address_prefixes     = [cidrsubnet("192.168.0.0/16", 7, 1)]
+  name                 = "featbit-containerapps-subnet"
+  resource_group_name  = azurerm_resource_group.featbit.name
+  virtual_network_name = azurerm_virtual_network.featbit_vnet.name
+}
+
+
+resource "azurerm_redis_cache" "featbit" {
+  name                          = "featbit-redis"
+  location                      = azurerm_resource_group.featbit.location
+  resource_group_name           = azurerm_resource_group.featbit.name
+  capacity                      = var.redis.capacity
+  family                        = var.redis.family
+  sku_name                      = var.redis.sku_name
+  enable_non_ssl_port           = var.redis.enable_non_ssl_port
+  minimum_tls_version           = var.redis.minimum_tls_version
+  public_network_access_enabled = var.redis.public_network_access_enabled
+
+  redis_configuration {
+  }
 }
 
 resource "azurerm_private_endpoint" "featbit_redis_pe" {
@@ -73,6 +81,44 @@ resource "azurerm_private_endpoint" "featbit_redis_pe" {
   }
 }
 
+
+
+
+
+
+resource "azurerm_private_dns_zone" "pdz" {
+  name                = "privatelink.redis.cache.windows.net"
+  resource_group_name = azurerm_resource_group.featbit.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "vnetlink_private" {
+  name                  = "mydnslink"
+  private_dns_zone_name = azurerm_private_dns_zone.pdz.name
+  resource_group_name   = azurerm_resource_group.featbit.name
+  virtual_network_id    = azurerm_virtual_network.featbit_vnet.id
+}
+
+# Re-matching with fqdn is a good way to make sure the ip you're reading is for the target.
+locals {
+  redis_server = [
+    for c in azurerm_private_endpoint.featbit_redis_pe.custom_dns_configs : c.ip_addresses[0]
+    if c.fqdn == "${azurerm_redis_cache.featbit.name}.redis.cache.windows.net"
+  ][0]
+}
+
+resource "azurerm_private_dns_a_record" "redis" {
+  name                = azurerm_redis_cache.featbit.name
+  records             = [local.redis_server]
+  resource_group_name = azurerm_redis_cache.featbit.resource_group_name
+  ttl                 = 3600
+  zone_name           = azurerm_private_dns_zone.pdz.name
+}
+
+
+
+
+
+
 resource "azurerm_log_analytics_workspace" "featbit" {
   name                = "acctest-01"
   location            = azurerm_resource_group.featbit.location
@@ -83,7 +129,7 @@ resource "azurerm_log_analytics_workspace" "featbit" {
 
 
 data "azurerm_redis_cache" "featbit" {
-  name = azurerm_redis_cache.featbit.name
+  name                = azurerm_redis_cache.featbit.name
   resource_group_name = azurerm_resource_group.featbit.name
 }
 
@@ -92,6 +138,7 @@ resource "azurerm_container_app_environment" "featbit" {
   location                   = azurerm_resource_group.featbit.location
   resource_group_name        = azurerm_resource_group.featbit.name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.featbit.id
+  infrastructure_subnet_id   = azurerm_subnet.featbit_container_apps.id
 }
 
 resource "azurerm_container_app" "da_server" {
@@ -105,7 +152,7 @@ resource "azurerm_container_app" "da_server" {
     external_enabled           = false
     traffic_weight {
       latest_revision = true
-      percentage = 100
+      percentage      = 100
     }
   }
 
@@ -119,8 +166,8 @@ resource "azurerm_container_app" "da_server" {
       cpu    = 0.75
       memory = "1.5Gi"
       env {
-        name = "REDIS_URL"
-        value = format("rediss://default:%s@%s:%s", data.azurerm_redis_cache.featbit.primary_access_key,data.azurerm_redis_cache.featbit.hostname,data.azurerm_redis_cache.featbit.ssl_port)
+        name  = "REDIS_URL"
+        value = format("rediss://default:%s@%s:%s", data.azurerm_redis_cache.featbit.primary_access_key, data.azurerm_redis_cache.featbit.hostname, data.azurerm_redis_cache.featbit.ssl_port)
       }
       env {
         name  = "MONGO_URI"
@@ -147,7 +194,7 @@ resource "azurerm_container_app" "da_server" {
 }
 
 data "azurerm_container_app" "da_server" {
-  name = azurerm_container_app.da_server.name
+  name                = azurerm_container_app.da_server.name
   resource_group_name = azurerm_resource_group.featbit.name
 }
 
@@ -162,7 +209,7 @@ resource "azurerm_container_app" "api_server" {
     external_enabled           = true
     traffic_weight {
       latest_revision = true
-      percentage = 100
+      percentage      = 100
     }
   }
 
@@ -236,7 +283,7 @@ resource "azurerm_container_app" "eval_server" {
     external_enabled           = true
     traffic_weight {
       latest_revision = true
-      percentage = 100
+      percentage      = 100
     }
   }
 
@@ -246,7 +293,7 @@ resource "azurerm_container_app" "eval_server" {
 }
 
 data "azurerm_container_app" "api_server" {
-  name = azurerm_container_app.api_server.name
+  name                = azurerm_container_app.api_server.name
   resource_group_name = azurerm_resource_group.featbit.name
 }
 
@@ -267,7 +314,7 @@ resource "azurerm_container_app" "ui" {
     external_enabled           = true
     traffic_weight {
       latest_revision = true
-      percentage = 100
+      percentage      = 100
     }
   }
 
