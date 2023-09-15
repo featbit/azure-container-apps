@@ -1,5 +1,5 @@
 variable "resource_group_name" {
-  default = "featbit-tio-rg"
+  default = "test-rg"
 }
 
 variable "location" {
@@ -25,6 +25,10 @@ variable "redis" {
   }
 }
 
-variable "cosmos_account_name"{
-  default = "featbit-mongodb"
+variable "subnet_redis_id" {
+  type = string
+}
+
+variable "vnet_id" {
+  type = string
 }
