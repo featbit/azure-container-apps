@@ -46,18 +46,6 @@ resource "azurerm_cosmosdb_account" "featbit" {
   # ip_range_filter = "104.42.195.92,40.76.54.131,52.176.6.30,52.169.50.45,52.187.184.26"
 }
 
-data "azurerm_resource_group" "rg" {
-  name = var.resource_group_name
-}
-
-data "azapi_resource_action" "cosmosdb_featbit_connection_strings" {
-  resource_id = azurerm_cosmosdb_account.featbit.id
-  type = "Microsoft.DocumentDB/databaseAccounts@2021-10-15"
-  action = "listConnectionStrings"
-
-  response_export_values = ["*"]
-}
-
 resource "azurerm_cosmosdb_mongo_database" "featbit" {
   name                = "featbit"
   resource_group_name = var.resource_group_name
@@ -68,6 +56,19 @@ resource "azurerm_cosmosdb_mongo_database" "featbit" {
   }
 }
 
+data "azurerm_resource_group" "rg" {
+  name = var.resource_group_name
+}
+
+data "azapi_resource_action" "cosmosdb_featbit_connection_strings" {
+  resource_id = azurerm_cosmosdb_account.featbit.id
+  type = "Microsoft.DocumentDB/databaseAccounts@2021-10-15"
+  action = "listConnectionStrings"
+
+  response_export_values = ["*"]
+
+  depends_on = [azurerm_cosmosdb_mongo_database.featbit]
+}
 
 resource "azurerm_private_dns_zone" "pdz" {
   name                = "privatelink.mongo.cosmos.azure.com"
