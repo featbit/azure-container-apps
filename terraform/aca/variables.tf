@@ -8,11 +8,15 @@ variable "location" {
 
 variable "redis" {
   type = object({
-    primary_access_key        = string
     hostname                  = string
     ssl_port                  = string
     primary_connection_string = string
   })
+}
+
+variable "redis_primary_access_key" {
+  sensitive = true
+  type      = string
 }
 
 variable "container_apps_environment" {
@@ -24,7 +28,8 @@ variable "subnet_aca_id" {
 }
 
 variable "mongodb_connection_str" {
-  type = string
+  sensitive = true
+  type      = string
 }
 
 variable "mongodb_dbname" {
@@ -32,11 +37,14 @@ variable "mongodb_dbname" {
 }
 
 variable "mongodb_primary_key" {
-  type = string
+  sensitive = true
+  type      = string
 }
 
 variable "mongodb_primary_sql_connection_string" {
-  type = string
+#  sensitive = true
+#  type      = string
+  default = ""
 }
 
 variable "container_name" {
