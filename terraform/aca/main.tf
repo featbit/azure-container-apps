@@ -120,7 +120,7 @@ resource "azurerm_container_app" "api_server" {
       }
       env {
         name  = "OLAP__ServiceHost"
-        value = "https://${azurerm_container_app.da_server.name}"
+        value = "http://${azurerm_container_app.da_server.name}"
       }
     }
   }
@@ -219,7 +219,7 @@ resource "azurerm_container_app" "ui" {
 
       env {
         name  = "API_URL"
-        value = "https://${azurerm_container_app.api_server.name}"
+        value = "https://${azurerm_container_app.api_server.ingress[0].fqdn}"
       }
       env {
         name  = "DEMO_URL"
@@ -227,7 +227,7 @@ resource "azurerm_container_app" "ui" {
       }
       env {
         name  = "EVALUATION_URL"
-        value = "https://${azurerm_container_app.eval_server.name}"
+        value = "https://${azurerm_container_app.eval_server.ingress[0].fqdn}"
       }
     }
   }

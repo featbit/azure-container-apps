@@ -73,6 +73,4 @@ module "azure_container_apps" {
   depends_on                            = [
     module.cosmosdb_for_mongodb
   ]
-  # mongodb_connection_str = "mongodb://featbit-cosmosdb-for-mongodb:Mmou0lLH7CrqPTAtuMjXUzXg4Skqa7koX0Ypj9fWrn8WVRNYxSWNRVi5DbsjLYvxMgfCvaTYdnagACDb2xXoow==@featbit-cosmosdb-for-mongodb.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@featbit-cosmosdb-for-mongodb@"
-
 }

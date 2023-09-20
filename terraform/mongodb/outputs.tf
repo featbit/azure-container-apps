@@ -1,6 +1,6 @@
 output "mongodb_primary_key" {
   sensitive = true
-  value     = azurerm_cosmosdb_account.featbit.primary_key
+  value     = module.azure_cosmos_db.cosmosdb_primary_key
 }
 
 output "mongodb_primary_sql_connection_string" {
