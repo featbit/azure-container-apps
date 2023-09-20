@@ -1,4 +1,3 @@
-
 resource "azurerm_redis_cache" "featbit" {
   name                          = "featbit-redis"
   location                      = var.location

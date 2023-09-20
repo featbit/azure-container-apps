@@ -5,12 +5,10 @@ output "primary_access_key" {
 
 output "hostname" {
   value = azurerm_redis_cache.featbit.hostname
-  sensitive = true
 }
 
 output "ssl_port" {
   value = azurerm_redis_cache.featbit.ssl_port
-  sensitive = true
 }
 
 output "primary_connection_string" {

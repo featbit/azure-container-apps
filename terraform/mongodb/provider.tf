@@ -5,13 +5,9 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 3.71.0, < 4.0"
     }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
+    azapi = {
+      source = "Azure/azapi"
+      version = ">= 1.9.0, < 2.0"
     }
   }
 }

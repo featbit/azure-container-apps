@@ -1,5 +1,5 @@
 resource "azurerm_log_analytics_workspace" "featbit" {
-  name                = "acctest-01"
+  name                = var.container_apps_environment
   location            = var.location
   resource_group_name = var.resource_group_name
   sku                 = "PerGB2018"
@@ -40,11 +40,11 @@ resource "azurerm_container_app" "da_server" {
       memory = "1.5Gi"
       env {
         name  = "REDIS_URL"
-        value = format("rediss://default:%s@%s:%s", var.redis.primary_access_key, var.redis.hostname, var.redis.ssl_port)
+        value = "rediss://default:${var.redis_primary_access_key}@${var.redis.hostname}:${var.redis.ssl_port}"
       }
       env {
-        name  = "MONGO_URI"
-        value = var.mongodb_connection_str
+        name        = "MONGO_URI"
+        secret_name = "mongo-uri"
       }
       env {
         name  = "MONGO_INITDB_DATABASE"
@@ -59,20 +59,27 @@ resource "azurerm_container_app" "da_server" {
         value = false
       }
       env {
-        name  = "mongodb_primary_key"
-        value = var.mongodb_primary_key
+        name        = "mongodb_primary_key"
+        secret_name = "mongodb-primary-key"
       }
       env {
-        name  = "mongodb_primary_sql_connection_string"
-        value = var.mongodb_primary_sql_connection_string
+        name        = "mongodb_primary_sql_connection_string"
+        secret_name = "mongodb-primary-sql-connection-string"
       }
     }
   }
-}
-
-data "azurerm_container_app" "da_server" {
-  name                = azurerm_container_app.da_server.name
-  resource_group_name = var.resource_group_name
+  secret {
+    name  = "mongo-uri"
+    value = var.mongodb_connection_str
+  }
+  secret {
+    name  = "mongodb-primary-key"
+    value = var.mongodb_primary_key
+  }
+  secret {
+    name  = "mongodb-primary-sql-connection-string"
+    value = var.mongodb_primary_sql_connection_string
+  }
 }
 
 resource "azurerm_container_app" "api_server" {
@@ -100,22 +107,30 @@ resource "azurerm_container_app" "api_server" {
       cpu    = 0.75
       memory = "1.5Gi"
       env {
-        name  = "MongoDb__ConnectionString"
-        value = var.mongodb_connection_str
+        name        = "MongoDb__ConnectionString"
+        secret_name = lower("MongoDb-ConnectionString")
       }
       env {
         name  = "MongoDb__Database"
         value = var.mongodb_dbname
       }
       env {
-        name  = "Redis__ConnectionString"
-        value = var.redis.primary_connection_string
+        name        = "Redis__ConnectionString"
+        secret_name = lower("Redis-ConnectionString")
       }
       env {
         name  = "OLAP__ServiceHost"
-        value = format("http://%s", azurerm_container_app.da_server.name)
+        value = "https://${azurerm_container_app.da_server.name}"
       }
     }
+  }
+  secret {
+    name  = lower("MongoDb-ConnectionString")
+    value = var.mongodb_connection_str
+  }
+  secret {
+    name  = lower("Redis-ConnectionString")
+    value = var.redis.primary_connection_string
   }
 
   depends_on = [
@@ -141,7 +156,7 @@ resource "azurerm_container_app" "eval_server" {
       memory = "1.5Gi"
       env {
         name  = "MongoDb__ConnectionString"
-        value = var.mongodb_connection_str
+        secret_name = lower("MongoDb-ConnectionString")
       }
       env {
         name  = "MongoDb__Database"
@@ -149,9 +164,17 @@ resource "azurerm_container_app" "eval_server" {
       }
       env {
         name  = "Redis__ConnectionString"
-        value = var.redis.primary_connection_string
+        secret_name = lower("Redis-ConnectionString")
       }
     }
+  }
+  secret {
+    name  = lower("MongoDb-ConnectionString")
+    value = var.mongodb_connection_str
+  }
+  secret {
+    name  = lower("Redis-ConnectionString")
+    value = var.redis.primary_connection_string
   }
 
   ingress {
@@ -168,17 +191,6 @@ resource "azurerm_container_app" "eval_server" {
     azurerm_container_app.api_server
   ]
 }
-
-data "azurerm_container_app" "api_server" {
-  name                = azurerm_container_app.api_server.name
-  resource_group_name = var.resource_group_name
-}
-
-data "azurerm_container_app" "eval_server" {
-  name                = azurerm_container_app.eval_server.name
-  resource_group_name = var.resource_group_name
-}
-
 
 resource "azurerm_container_app" "ui" {
   name                         = var.container_name.ui
@@ -207,7 +219,7 @@ resource "azurerm_container_app" "ui" {
 
       env {
         name  = "API_URL"
-        value = format("https://%s", data.azurerm_container_app.api_server.ingress[0].fqdn)
+        value = "https://${azurerm_container_app.api_server.name}"
       }
       env {
         name  = "DEMO_URL"
@@ -215,13 +227,8 @@ resource "azurerm_container_app" "ui" {
       }
       env {
         name  = "EVALUATION_URL"
-        value = format("https://%s", data.azurerm_container_app.eval_server.ingress[0].fqdn)
+        value = "https://${azurerm_container_app.eval_server.name}"
       }
     }
   }
-
-  depends_on = [
-    azurerm_container_app.api_server,
-    azurerm_container_app.eval_server
-  ]
 }

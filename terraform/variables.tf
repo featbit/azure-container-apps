@@ -8,12 +8,12 @@ variable "location" {
 
 variable "redis" {
   type = object({
-    capacity                      = number
-    family                        = string
-    sku_name                      = string
-    enable_non_ssl_port           = bool
-    minimum_tls_version           = string
-    public_network_access_enabled = bool
+    capacity                      = optional(number, 0)
+    family                        = optional(string, "C")
+    sku_name                      = optional(string, "Basic")
+    enable_non_ssl_port           = optional(bool, false)
+    minimum_tls_version           = optional(string, "1.2")
+    public_network_access_enabled = optional(bool, false)
   })
   default = {
     capacity            = 0
