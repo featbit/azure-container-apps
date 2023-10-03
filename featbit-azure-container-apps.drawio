@@ -1,4 +1,4 @@
-<mxfile modified="2023-10-03T05:54:02.948Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="DlziyAC5xZsMucACfs7q" version="22.0.0" type="github">
+<mxfile modified="2023-10-03T05:54:50.006Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="xSbBstvc7e0-rZ6MgZmW" version="22.0.0" type="github">
   <diagram id="WI9T0HZ2pTsCkuznbFz-" name="Page-1">
     <mxGraphModel dx="978" dy="-127" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -27,6 +27,22 @@
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-10" value="API" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Worker_Container_App.svg;" vertex="1" parent="1">
           <mxGeometry x="656.45" y="960" width="37.09" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="_lUZbtHcV2m0dnbni5Nq-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="_lUZbtHcV2m0dnbni5Nq-11" target="_lUZbtHcV2m0dnbni5Nq-21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="675" y="1140" />
+              <mxPoint x="709" y="1140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_lUZbtHcV2m0dnbni5Nq-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_lUZbtHcV2m0dnbni5Nq-11" target="_lUZbtHcV2m0dnbni5Nq-15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="675" y="1140" />
+              <mxPoint x="479" y="1140" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-11" value="DA" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/other/Worker_Container_App.svg;" vertex="1" parent="1">
           <mxGeometry x="656.4599999999999" y="1061" width="37.09" height="36" as="geometry" />
