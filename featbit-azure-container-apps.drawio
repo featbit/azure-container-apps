@@ -1,4 +1,4 @@
-<mxfile modified="2023-10-03T05:56:59.395Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="iz6Cp3Q21AWM-jQoM-GL" version="22.0.0" type="github">
+<mxfile modified="2023-10-03T05:58:44.133Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="DqTEtJqNG_ezCxBRakTD" version="22.0.0" type="github">
   <diagram id="WI9T0HZ2pTsCkuznbFz-" name="Page-1">
     <mxGraphModel dx="978" dy="-127" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -101,11 +101,27 @@
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.989;entryY=0.494;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;" edge="1" parent="1" source="_lUZbtHcV2m0dnbni5Nq-12" target="_lUZbtHcV2m0dnbni5Nq-11">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="_lUZbtHcV2m0dnbni5Nq-38" value="Private DNS zone for &lt;br&gt;Azure Redis" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/DNS_Zones.svg;" vertex="1" parent="1">
-          <mxGeometry x="313" y="1149" width="31" height="31" as="geometry" />
+        <mxCell id="_lUZbtHcV2m0dnbni5Nq-38" value="Private DNS zone &lt;br&gt;for Azure Redis" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/DNS_Zones.svg;" vertex="1" parent="1">
+          <mxGeometry x="270" y="1149" width="31" height="31" as="geometry" />
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-39" value="Private DNS zone for &lt;br&gt;Azure Cosmos DB" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/DNS_Zones.svg;" vertex="1" parent="1">
-          <mxGeometry x="314" y="1270" width="30" height="30" as="geometry" />
+          <mxGeometry x="270" y="1280" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_lUZbtHcV2m0dnbni5Nq-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.003;entryY=0.57;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;" edge="1" parent="1" source="_lUZbtHcV2m0dnbni5Nq-38" target="_lUZbtHcV2m0dnbni5Nq-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lUZbtHcV2m0dnbni5Nq-41" value="Linked" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_lUZbtHcV2m0dnbni5Nq-40">
+          <mxGeometry x="-0.1191" y="-4" relative="1" as="geometry">
+            <mxPoint y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_lUZbtHcV2m0dnbni5Nq-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.002;entryY=0.844;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;" edge="1" parent="1" source="_lUZbtHcV2m0dnbni5Nq-39" target="_lUZbtHcV2m0dnbni5Nq-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lUZbtHcV2m0dnbni5Nq-43" value="Linked" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="_lUZbtHcV2m0dnbni5Nq-42">
+          <mxGeometry x="-0.4105" y="2" relative="1" as="geometry">
+            <mxPoint x="13" y="-7" as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
