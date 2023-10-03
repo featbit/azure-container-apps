@@ -1,6 +1,6 @@
-<mxfile modified="2023-10-03T16:45:28.019Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="OCX0c7M0aM6pKO_CdUuT" version="22.0.1" type="github">
+<mxfile modified="2023-10-03T16:47:30.552Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="Tc595SGHfkDV56pLp1dn" version="22.0.1" type="github">
   <diagram id="WI9T0HZ2pTsCkuznbFz-" name="Page-1">
-    <mxGraphModel dx="1158" dy="-88" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1158" dy="739" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -136,6 +136,12 @@
         </mxCell>
         <mxCell id="nllUIkOw4uZwU0BKNp_d-1" value="These resources are only accessible for resource in Virtual Network; Or you can configure it for you from internet through restrict IP address" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="404" y="1586" width="416" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="nllUIkOw4uZwU0BKNp_d-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="nllUIkOw4uZwU0BKNp_d-4" target="_lUZbtHcV2m0dnbni5Nq-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nllUIkOw4uZwU0BKNp_d-4" value="&lt;font style=&quot;font-size: 29px;&quot;&gt;Internet&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="653.69" y="750" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
