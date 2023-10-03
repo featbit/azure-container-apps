@@ -1,4 +1,4 @@
-<mxfile modified="2023-10-03T06:01:37.857Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="UCnObr6Ddr773-Re9rSf" version="22.0.0" type="github">
+<mxfile modified="2023-10-03T06:01:55.519Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="M-aOPeZSHNbO0zgi_UJW" version="22.0.0" type="github">
   <diagram id="WI9T0HZ2pTsCkuznbFz-" name="Page-1">
     <mxGraphModel dx="1327" dy="123" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -107,10 +107,10 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-38" value="Private DNS zone &lt;br&gt;for Azure Redis" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/DNS_Zones.svg;" vertex="1" parent="1">
-          <mxGeometry x="270" y="1149" width="31" height="31" as="geometry" />
+          <mxGeometry x="270" y="1144" width="31" height="31" as="geometry" />
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-39" value="Private DNS zone for &lt;br&gt;Azure Cosmos DB" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/DNS_Zones.svg;" vertex="1" parent="1">
-          <mxGeometry x="270" y="1280" width="30" height="30" as="geometry" />
+          <mxGeometry x="270" y="1279" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.003;entryY=0.57;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;" edge="1" parent="1" source="_lUZbtHcV2m0dnbni5Nq-38" target="_lUZbtHcV2m0dnbni5Nq-2">
           <mxGeometry relative="1" as="geometry" />
