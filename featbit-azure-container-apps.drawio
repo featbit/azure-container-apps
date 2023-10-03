@@ -1,4 +1,4 @@
-<mxfile modified="2023-10-03T05:35:45.434Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="KdXeNKYhq0CR_IGGze7h" version="22.0.0" type="github">
+<mxfile modified="2023-10-03T05:35:56.947Z" host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.47" etag="7KNZjsWTGMXJMjnzyJXz" version="22.0.0" type="github">
   <diagram id="WI9T0HZ2pTsCkuznbFz-" name="Page-1">
     <mxGraphModel dx="978" dy="-127" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -35,10 +35,10 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-15" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="512.5400000000001" y="1210" width="132" height="90" as="geometry" />
+          <mxGeometry x="399.00000000000006" y="1210" width="132" height="90" as="geometry" />
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-16" value="Private Endpoint for &lt;br&gt;Azure Redis" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/networking/Private_Endpoint.svg;" vertex="1" parent="1">
-          <mxGeometry x="557.6300000000001" y="1222" width="39.27" height="36" as="geometry" />
+          <mxGeometry x="444.0900000000001" y="1222" width="39.27" height="36" as="geometry" />
         </mxCell>
         <mxCell id="_lUZbtHcV2m0dnbni5Nq-17" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="390" y="1410" width="150" height="110" as="geometry" />
