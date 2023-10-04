@@ -36,12 +36,10 @@ Before applying the Terraform deployment, you can modify variables defined in va
 - Change the name of the resources location by changing the value of `location` variable in the `variables.tf` file in the `terraform` directory.
 - Change the redis configuration by changing the value of `redis` variable in the `variables.tf` file in the `terraform` directory.
 
-For changing cpu, memory, number of replica of each container app, currently you need to edit directly in the `main.tf` file in the `terraform/aca` directory. We will add these variables in the future.
-
-## Support
-
-For any questions, you can create an issue, contact us by joining our [Slack channel](https://join.slack.com/t/featbit/shared_invite/zt-1ew5e2vbb-x6Apan1xZOaYMnFzqZkGNQ) or email us to [support@featbit.co](mailto:support@featbit.co)
+To change cpu, memory, number of replicas of each container app, you currently have to edit directly in the `main.tf` file in the `terraform/aca` directory. We will add these variables in the future to make installation easier.
 
 ## Important Notes
 
-The terraform code is for FeatBit Standard version ([see difference between Standard and Pro version](https://docs.featbit.co/docs/tech-stack/standard-vs.-professional)), for Pro version and High Available solutions you can contact us by joining our [Slack channel](https://join.slack.com/t/featbit/shared_invite/zt-1ew5e2vbb-x6Apan1xZOaYMnFzqZkGNQ) or email us to [contact@featbit.co](mailto:contact@featbit.co).
+The Terraform code is actually only for the FeatBit Standard version. [Click here to see the difference between Standard and Pro version](https://docs.featbit.co/docs/tech-stack/standard-vs.-professional)
+
+For Pro version, high availability solutions, or any other questions, you can contact us by creating an issue, joining our [Slack channel](https://join.slack.com/t/featbit/shared_invite/zt-1ew5e2vbb-x6Apan1xZOaYMnFzqZkGNQ), or emailing us at [support@featbit.co](mailto:support@featbit.co).
