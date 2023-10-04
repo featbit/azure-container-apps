@@ -2,7 +2,7 @@
 
 This repo includes terraform code of deploying [FeatBit (a feature flag service)](https://github.com/featbit/featbit) into Azure.
 
-
+![Deploy to Azure](featbit-azure-container-apps.drawio.png)
 
 As image shown above, this terraform code use Azure vnet, private endpoint and private DNS zone to secure the access to Azure Cache for Redis and Azure CosmosDB for MongoDB. DA server is also protected by Azure Container APPs firewall.
 
