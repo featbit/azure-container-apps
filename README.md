@@ -1,15 +1,21 @@
-# azure-container-apps
+# Deploy FeatBit to Azure with Terraform
 
-This repo includes terraform code of deploying [FeatBit (a feature flag service)](https://github.com/featbit/featbit) into Azure.
+This repo contains terraform code for deploying FeatBit on Azure. FeatBit is a feature flag service that helps you manage feature flags and evaluate them in real-time. You can find more information about FeatBit in [FeatBit official website](https://www.featbit.co/) and [Github Repo](https://github.com/featbit/featbit).
 
 ![Deploy to Azure](featbit-azure-container-apps.drawio.png)
 
-As image shown above, this terraform code use Azure vnet, private endpoint and private DNS zone to secure the access to Azure Cache for Redis and Azure CosmosDB for MongoDB. DA server is also protected by Azure Container APPs firewall.
+As shown in the figure above, FeatBit's services are deployed as Azure Container Apps (ACA) in Azure. Such as FeatBit's UI portal, FeatBit's API server, FeatBit's evaluation server, FeatBit's DA server. Evaluation service and API service communicate with DA service inside ACA.
+
+>>> Note: ACA is actually a managed Kubernetes cluster. You can find more information about ACA in [Azure Container Apps official document](https://docs.microsoft.com/en-us/azure/container-apps/). 
+
+All services are located in an Azure VNet, we use private endpoint and private DNS zone to secure the access to Azure Cache for Redis and Azure CosmosDB for MongoDB. You can find more information about private endpoint and private DNS zone in [Azure official document](https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview).
+
+FeatBit's UI portal, API server and Evaluation server are exposed to the public internet through an Azure Load Balancer and Azure IP addresses. You can find more information about Azure Load Balancer in [Azure official document](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview).
 
 ## Azure Getting Started
 
-If you're not familiar with terraform Azure provider, you can follow the steps in [terraform's Azure Provider official tutorial](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build).
 
+If you're not familiar with Terraform Azure Provider, you can follow the steps in the [official Azure Provider tutorial](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build).
 
 ## Deploy FeatBit to your Azure
 
@@ -24,13 +30,13 @@ terraform plan
 terraform apply
 ```
 
-Before you apply the terraform deployment, you can change variables defined in variables.tf files to customize your deployment. For example, you can
+Before applying the Terraform deployment, you can modify variables defined in variables.tf files to customize your deployment. For example, you can
 
-- Change the name of the resource group by changing the value of `resource_group_name` variable in the file `variables.tf` under `terraform` folder.
-- Change the name of the resources location by changing the value of `location` variable in the file `variables.tf` under `terraform` folder.
-- Change the redis configuration by changing the value of `redis` variable in the file variables.tf under `terraform` folder.
+- Change the name of the resource group by changing the value of the `resource_group_name` variable in the `variables.tf` file in the `terraform` directory.
+- Change the name of the resources location by changing the value of `location` variable in the `variables.tf` file in the `terraform` directory.
+- Change the redis configuration by changing the value of `redis` variable in the `variables.tf` file in the `terraform` directory.
 
-For changing cpu, memory, number of replica of each container app, currently you need to edit directly in the file `main.tf` under `terraform/aca` folder. We will add these variables in the future.
+For changing cpu, memory, number of replica of each container app, currently you need to edit directly in the `main.tf` file in the `terraform/aca` directory. We will add these variables in the future.
 
 ## Support
 
