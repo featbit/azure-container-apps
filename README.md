@@ -1,40 +1,41 @@
 # azure-container-apps
-Host FeatBit Feature Flag Service in production environment using Azure Container APPs
+
+This repo includes terraform code of deploying [FeatBit (a feature flag service)](https://github.com/featbit/featbit) into Azure.
+
+
+
+As image shown above, this terraform code use Azure vnet, private endpoint and private DNS zone to secure the access to Azure Cache for Redis and Azure CosmosDB for MongoDB. DA server is also protected by Azure Container APPs firewall.
 
 ## Azure Getting Started
 
-https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build
+If you're not familiar with terraform Azure provider, you can follow the steps in [terraform's Azure Provider official tutorial](https://developer.hashicorp.com/terraform/tutorials/azure-get-started/azure-build).
+
+
+## Deploy FeatBit to your Azure
 
 ```bash
-# use the Azure CLI tool to setup your account permissions locally.
-az login --tenant 551443f2-94bb-4dd3-a22f-1d267240fe40
+# run terraform init to download the required providers
+terraform init
 
-# Once you have chosen the account subscription ID, set the account with the Azure CLI.
-az account set --subscription "5776697f-f76a-4a4a-9b42-ce2dbe5d7475"
+# run terraform plan to see what will be deployed
+terraform plan
 
-# Create a Service Principal
-az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/5776697f-f76a-4a4a-9b42-ce2dbe5d7475"
+# run terraform apply to deploy FeatBit to your Azure
+terraform apply
 ```
 
-```bash
+Before you apply the terraform deployment, you can change variables defined in variables.tf files to customize your deployment. For example, you can
 
-# {
-#   "appId": "805e4e42-b6e1-4fb0-b348-2fac2bf30ffc",
-#   "displayName": "azure-cli-2023-09-06-06-01-56",
-#   "password": "",
-#   "tenant": "551443f2-94bb-4dd3-a22f-1d267240fe40"
-# }
+- Change the name of the resource group by changing the value of `resource_group_name` variable in the file `variables.tf` under `terraform` folder.
+- Change the name of the resources location by changing the value of `location` variable in the file `variables.tf` under `terraform` folder.
+- Change the redis configuration by changing the value of `redis` variable in the file variables.tf under `terraform` folder.
 
-# These values map to the Terraform variables like so:
+For changing cpu, memory, number of replica of each container app, currently you need to edit directly in the file `main.tf` under `terraform/aca` folder. We will add these variables in the future.
 
-# appId is the client_id defined above.
-# password is the client_secret defined above.
-# tenant is the tenant_id defined above.
+## Support
 
-$Env:ARM_CLIENT_ID = "805e4e42-b6e1-4fb0-b348-2fac2bf30ffc"
-$Env:ARM_CLIENT_SECRET = ""
-$Env:ARM_SUBSCRIPTION_ID = "5776697f-f76a-4a4a-9b42-ce2dbe5d7475"
-$Env:ARM_TENANT_ID = "551443f2-94bb-4dd3-a22f-1d267240fe40"
-```
+For any questions, you can create an issue, contact us by joining our [Slack channel](https://join.slack.com/t/featbit/shared_invite/zt-1ew5e2vbb-x6Apan1xZOaYMnFzqZkGNQ) or email us to [support@featbit.co](mailto:support@featbit.co)
 
-https://github.com/DFE-Digital/terraform-azurerm-container-apps-hosting
+## Important Notes
+
+The terraform code is for FeatBit Standard version ([see difference between Standard and Pro version](https://docs.featbit.co/docs/tech-stack/standard-vs.-professional)), for Pro version and High Available solutions you can contact us by joining our [Slack channel](https://join.slack.com/t/featbit/shared_invite/zt-1ew5e2vbb-x6Apan1xZOaYMnFzqZkGNQ) or email us to [contact@featbit.co](mailto:contact@featbit.co).
