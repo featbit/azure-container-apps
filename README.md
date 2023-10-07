@@ -1,4 +1,4 @@
-# Deploy FeatBit to Azure with Terraform
+# Deploy FeatBit on Azure using Terraform
 
 This repo contains terraform code for deploying FeatBit on Azure. FeatBit is a feature flag service that helps you manage feature flags and evaluate them in real-time. You can find more information about FeatBit in [FeatBit official website](https://www.featbit.co/) and [Github Repo](https://github.com/featbit/featbit).
 
