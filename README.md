@@ -40,7 +40,7 @@ To change cpu, memory, number of replicas of each container app, you currently h
 
 ## Initialize Cosmos DB
 
-After the deployment is finished, you need to initialize database with some data.
+After the deployment is finished, you need to: 
 
 ###  Seed data
 
