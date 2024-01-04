@@ -38,11 +38,11 @@ Before applying the Terraform deployment, you can modify variables defined in va
 
 To change cpu, memory, number of replicas of each container app, you currently have to edit directly in the `main.tf` file in the `terraform/aca` directory. We will add these variables in the future to make installation easier.
 
-## Cosmos DB database
+## Cosmos DB
 
 After the deployment is finished, you need to initialize database with some data.
 
-### Initialize database with seed data
+### Initialize Cosmos DB with seed data
 
 Please copy and run this [script](https://github.com/featbit/featbit/blob/main/infra/mongodb/docker-entrypoint-initdb.d/init.js) again your CosmosDB.
 
