@@ -38,17 +38,17 @@ Before applying the Terraform deployment, you can modify variables defined in va
 
 To change cpu, memory, number of replicas of each container app, you currently have to edit directly in the `main.tf` file in the `terraform/aca` directory. We will add these variables in the future to make installation easier.
 
-## Cosmos DB
+## Initialize Cosmos DB
 
 After the deployment is finished, you need to initialize database with some data.
 
-### Initialize Cosmos DB with seed data
+###  Seed data
 
-Please copy and run this [script](https://github.com/featbit/featbit/blob/main/infra/mongodb/docker-entrypoint-initdb.d/init.js) again your CosmosDB.
+Please copy and run [this script](https://github.com/featbit/featbit/blob/main/infra/mongodb/docker-entrypoint-initdb.d/init.js) again your CosmosDB.
 
 ### Create index
 
-Due to compatiblity issues with MongoDB, we need to manually add some indexes to Cosmos DB, please follow this [link](https://docs.featbit.co/installation/faq#use-featbit-with-azure-cosmos-db)
+Due to compatiblity issues with MongoDB, we need to manually add some indexes to Cosmos DB, please follow [this link](https://docs.featbit.co/installation/faq#use-featbit-with-azure-cosmos-db)
 
 
 ## Run FeatBit
