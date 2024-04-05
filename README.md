@@ -50,7 +50,7 @@ Please copy and run [this script](https://github.com/featbit/featbit/blob/main/i
 
 Due to compatiblity issues with MongoDB, we need to manually add some indexes to Cosmos DB, please follow [this link](https://docs.featbit.co/installation/faq#use-featbit-with-azure-cosmos-db)
 
-### Example of initilize Cosmos DB
+### Example of how to initialize Cosmos DB
 
 In Azure CosmosDB for MongoDB account, go to the **Networking** page, then:
 
@@ -64,6 +64,17 @@ Open a MongoDB GUI tool, I used NoSqlBooster free edition in this example. Copy 
 
 ![image](https://github.com/featbit/azure-container-apps/assets/68597908/26071fb1-a54d-412e-80ff-c7aae85f7230)
 
+1. Copy and run [this script](https://github.com/featbit/featbit/blob/main/infra/mongodb/docker-entrypoint-initdb.d/init.js) in the NoSqlBooster.
+2. Copy and run [the script mentioned in FeatBit's doc](https://docs.featbit.co/installation/faq#use-featbit-with-azure-cosmos-db) in the NoSqlBooster.
+
+![image](https://github.com/featbit/azure-container-apps/assets/68597908/232c3210-c311-467e-b78f-eb3aefd5e89a)
+
+Then you can check if the tables and indexes are created correctly, as shown in the figure below.
+
+![image](https://github.com/featbit/azure-container-apps/assets/68597908/c5c97e8a-06e2-4e32-8c2d-cdcca8a995b9)
+
+
+After the scripts have been successfully executed, don't forget to remove the firewall setting that allowed your current IP to access the database.
 
 ## Run FeatBit
 
