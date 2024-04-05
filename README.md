@@ -50,6 +50,16 @@ Please copy and run [this script](https://github.com/featbit/featbit/blob/main/i
 
 Due to compatiblity issues with MongoDB, we need to manually add some indexes to Cosmos DB, please follow [this link](https://docs.featbit.co/installation/faq#use-featbit-with-azure-cosmos-db)
 
+### Example of initilize Cosmos DB
+
+In Azure CosmosDB for MongoDB account, go to the **Networking** page, then:
+
+1. Set **Public network access** to "Selected networks"
+2. In the **Firewall** section, click "+ Add my current IP (...)"
+3. Click the **Save** button.
+
+![image](https://github.com/featbit/azure-container-apps/assets/68597908/eea0af11-851c-47c0-8201-aafca837d9e3)
+
 
 ## Run FeatBit
 
