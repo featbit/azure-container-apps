@@ -39,8 +39,24 @@ resource "azurerm_container_app" "da_server" {
       cpu    = 0.75
       memory = "1.5Gi"
       env {
-        name  = "REDIS_URL"
-        value = "rediss://default:${var.redis_primary_access_key}@${var.redis.hostname}:${var.redis.ssl_port}"
+        name  = "REDIS_SSL"
+        value = true
+      }
+      env {
+        name  = "REDIS_USER"
+        value = "default"
+      }
+      env {
+        name  = "REDIS_PASSWORD"
+        value = "${var.redis_primary_access_key}"
+      }
+      env {
+        name  = "REDIS_HOST"
+        value = "${var.redis.hostname}"
+      }
+      env {
+        name  = "REDIS_PORT"
+        value = "${var.redis.ssl_port}"
       }
       env {
         name        = "MONGO_URI"
