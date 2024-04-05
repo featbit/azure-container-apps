@@ -60,6 +60,10 @@ In Azure CosmosDB for MongoDB account, go to the **Networking** page, then:
 
 ![image](https://github.com/featbit/azure-container-apps/assets/68597908/eea0af11-851c-47c0-8201-aafca837d9e3)
 
+Open a MongoDB GUI tool, I used NoSqlBooster free edition in this example. Copy the connection string from CosmosDB to NoSqlBooster to connect to MongoDB.
+
+![image](https://github.com/featbit/azure-container-apps/assets/68597908/26071fb1-a54d-412e-80ff-c7aae85f7230)
+
 
 ## Run FeatBit
 
