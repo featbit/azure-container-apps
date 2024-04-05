@@ -44,7 +44,7 @@ After the deployment is finished, you need to:
 
 ###  Seed data
 
-Please copy and run [this script](https://github.com/featbit/featbit/blob/main/infra/mongodb/docker-entrypoint-initdb.d/init.js) again your CosmosDB.
+Please copy and run [this script](https://github.com/featbit/featbit/blob/main/infra/mongodb/docker-entrypoint-initdb.d/init.js) against your CosmosDB.
 
 ### Create index
 
