@@ -1,5 +1,11 @@
 # Deploy FeatBit on Azure using Terraform
 
+> IMPORTANT NOTE:
+> 
+> This version does not currently support FeatBit version 5.0.0 or later, due to significant configuration changes introduced in 5.0.0+ for selecting the database (PostgreSQL or MongoDB).
+> 
+> We will provide an update for this Azure Terraform template in the future.
+
 This repo contains terraform code for deploying FeatBit on Azure. FeatBit is a feature flag service that helps you manage feature flags and evaluate them in real-time. You can find more information about FeatBit in [FeatBit official website](https://www.featbit.co/) and [Github Repo](https://github.com/featbit/featbit).
 
 ![Deploy to Azure](featbit-azure-container-apps.drawio.png)
